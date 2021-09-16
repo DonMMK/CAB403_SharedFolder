@@ -57,10 +57,10 @@ char* op_names[] = {
 bool create_shared_object( shared_memory_t* shm, const char* share_name ) {
     // Remove any previous instance of the shared memory object, if it exists.
     // INSERT SOLUTION HERE
-
+    shm_unlink(shm);
     // Assign share name to shm->name.
     // INSERT SOLUTION HERE
-
+    shm->name = share_name;
     // Create the shared memory object, allowing read-write access, and saving the
     // resulting file descriptor in shm->fd. If creation failed, ensure 
     // that shm->data is NULL and return false.
