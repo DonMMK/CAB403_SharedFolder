@@ -17,19 +17,17 @@ void dv_ensure_capacity( dbl_vector_t* vec, size_t new_size ) {
     size_t old_capacity = vec->capacity;
     size_t old_size = vec->size;
     double *old_data = vec->data;
-    double new_capacity = fmax(old_capacity * DV_GROWTH_FACTOR, new_size);
-    double new_mem_size = new_capacity;
-    
-    vec->size = old_size;
-    if (vec->size <= old_capacity)
+
+    if (new_size <= old_capacity)
     {
         vec->capacity = old_capacity;
         vec->data = old_data;
     }
     else
     {
+        int new_capacity = fmax(old_capacity * DV_GROWTH_FACTOR, new_size);
         vec->capacity = new_capacity;
-        vec->data = realloc(old_data, sizeof(double)*new_mem_size);
+        vec->data = realloc(old_data, sizeof(double)*new_capacity);
     }
 
 }
@@ -39,7 +37,8 @@ void dv_destroy( dbl_vector_t* vec ) {
     // INSERT SOLUTION HERE
     vec->capacity = 0;
     vec->size = 0;
-    void free(void *data); 
+    free(vec->data);
+    //void free(void *data); 
     vec->data = NULL;
 }
 
@@ -126,7 +125,7 @@ void dv_insert_at( dbl_vector_t* vec, size_t pos, double new_item ) {
     // INSERT SOLUTION HERE
     size_t old_size = vec->size;
     double *old_data = vec->data;
-    int loc = min(pos, old_size);
+    int loc = fmin(pos, old_size);
 
     vec->size = old_size + 1;
     dv_ensure_capacity(vec,old_size+1);
@@ -134,22 +133,48 @@ void dv_insert_at( dbl_vector_t* vec, size_t pos, double new_item ) {
         vec->data[i] = old_data[i];
     }
 
-    /*
-    for( ){
-        vec->data[i] = old_data[i-1]
+    for(int i = loc+1; i < vec->size ; i++){
+        vec->data[i] = old_data[i-1];
     }
-    */
     vec->data[loc] = new_item;
 
 }
 
 void dv_remove_at( dbl_vector_t* vec, size_t pos ) {
     // INSERT SOLUTION HERE
+    size_t old_size = vec->size;
+    double *old_data = vec->data;
+    int loc = fmin(pos, old_size);
 
+    for(int i= 0 ; i < loc; i++){
+        vec->data[i] = old_data[i];
+    }
+
+    for(int i= loc; i < vec->size; i++){
+        vec->data[i] = old_data[i+1];
+    }
+    if(pos >= old_size){
+        vec->size = old_size;
+    }
+    else{
+        vec->size = old_size - 1;
+    }
+  
 
 }
 
 void dv_foreach( dbl_vector_t* vec, void (*callback)(double, void*), void* info ) {
     // INSERT SOLUTION HERE
+    size_t old_size = vec->size;
+    double *old_data = vec->data;
+    size_t old_capacity = vec->capacity;
+
+
+    vec->capacity = old_capacity;
+    vec->size = old_size;
+    vec->data = old_data;
+    for(int i = 0; i < vec->size; i++){
+        callback(vec->data[i], info);
+    }
 }
 
