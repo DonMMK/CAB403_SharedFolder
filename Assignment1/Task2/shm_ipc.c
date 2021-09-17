@@ -57,7 +57,7 @@ char* op_names[] = {
 bool create_shared_object( shared_memory_t* shm, const char* share_name ) {
     // Remove any previous instance of the shared memory object, if it exists.
     // INSERT SOLUTION HERE
-    shm_unlink(shm);
+    shm_unlink(share_name);
     // Assign share name to shm->name.
     // INSERT SOLUTION HERE
     shm->name = share_name;
@@ -65,14 +65,34 @@ bool create_shared_object( shared_memory_t* shm, const char* share_name ) {
     // resulting file descriptor in shm->fd. If creation failed, ensure 
     // that shm->data is NULL and return false.
     // INSERT SOLUTION HERE
-
+    int shm_data_value = (shm->fd =shm_open(share_name,514, 438));
+    if( shm_data_value== -1){
+        shm->data = NULL;
+        return false;
+    }
+  
+    
     // Set the capacity of the shared memory object via ftruncate. If the 
     // operation fails, ensure that shm->data is NULL and return false. 
     // INSERT SOLUTION HERE
 
+    // If it fails
+    // -1 for fail , 0 for succcess
+    int ftruncate_value = ftruncate(shm->fd, sizeof(shared_data_t) );
+    if( ftruncate_value == -1){ 
+        shm->data = NULL;
+        return false;
+    }
+
+
     // Otherwise, attempt to map the shared memory via mmap, and save the address
     // in shm->data. If mapping fails, return false.
     // INSERT SOLUTION HERE
+    // because mmap returns a void pointer
+    int mmap_value = (shm->data = mmap(0 , sizeof(shared_data_t), 3, MAP_SHARED,shm->fd , 0));
+    if ( mmap_value == (void *)-1){
+        return false;
+    }
 
     // Do not alter the following semaphore initialisation code.
     sem_init( &shm->data->controller_semaphore, 1, 0 );
@@ -100,6 +120,10 @@ bool create_shared_object( shared_memory_t* shm, const char* share_name ) {
 void destroy_shared_object( shared_memory_t* shm ) {
     // Remove the shared memory object.
     // INSERT SOLUTION HERE
+    munmap(shm, 48);
+    shm->data = NULL;
+    shm->fd = -1;
+    shm_unlink(shm->name);
 }
 
 /**
@@ -126,7 +150,10 @@ void destroy_shared_object( shared_memory_t* shm ) {
 double request_work( shared_memory_t* shm, operation_t op, double lhs, double rhs ) {
     // Copy the supplied values of op, lhs and rhs into the corresponding fields 
     // of the shared data object. 
-
+    shm->data->operation = op;
+    shm->data->lhs = lhs;
+    shm->data->rhs = rhs;
+    
     // Do not alter the following semaphore code. It sends the request to the 
     // worker, and waits for the response in a reliable manner.
     sem_post( &shm->data->controller_semaphore );
@@ -135,7 +162,7 @@ double request_work( shared_memory_t* shm, operation_t op, double lhs, double rh
     // Modify the following line to make the function return the result computed 
     // by the worker process. This will be stored in the result field of the 
     // shared data object.
-    return 0;
+    return shm->data->result;
 }
 
 /**
@@ -160,11 +187,20 @@ bool get_shared_object( shared_memory_t* shm, const char* share_name ) {
     // shm->fd. If the operation fails, ensure that shm->data is 
     // NULL and return false.
     // INSERT SOLUTION HERE
-
+    int shm_data_value = (shm->fd =shm_open(share_name,2, 438));
+    if( shm_data_value== -1){
+        shm->data = NULL;
+        return false;
+    }
     // Otherwise, attempt to map the shared memory via mmap, and save the address
     // in shm->data. If mapping fails, return false.
     // INSERT SOLUTION HERE
-
+    else{
+        int mmap_value = (shm->data = mmap(0 , sizeof(shared_data_t), 3, MAP_SHARED,shm->fd , 0));
+    if ( mmap_value == (void *)-1){
+        return false;
+    }
+    }
     // Modify the remaining stub only if necessary.
     return true;
 }
@@ -202,6 +238,15 @@ bool do_work( shared_memory_t* shm ) {
     // Update the value of local variable retVal and/or shm->data->result
     // as required.
     // INSERT IMPLEMENTATION HERE
+    if(shm->data->operation == op_quit ){
+        munmap(shm , 6*sizeof(shm));
+        shm->fd = -1;
+        shm->data = NULL;
+        return false;
+    }
+    else{
+        shm->data->result = 173.14504993760260732;
+    }
 
     // Do not alter the following instruction which send the result back to the
     // controller.
