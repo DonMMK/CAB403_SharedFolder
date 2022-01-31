@@ -1,45 +1,26 @@
 # Systems Programming
-# Project Name
-- This repository contains the code for the project name. This project was done in language. Few Custom Lines that be copied over to the resume.
----
-### Skills gained at the completion of the project
-- List out skills as per the assessment brief
----
-### Installation/Use instructions
--   Describe the architecture and components of modern operating systems.
--   Articulate industry standards and critically apply best practice for developing safety-critical systems.
--   Identify the potential societal and safety impact of systems programming failures.
--   Construct low-level systems programs to carry out authentic systems programming tasks.
----
-### Completed Project
-- This is where you can put pictures
----
-### Notes about the Project
-- open source can use/contribute to it
----
-
-
-
-# Unit Name
-This repository contains the code for Unit_Code which is a part of the core/optional curriculum of the Computer and Software Systems Major/Robotics Minor. 
+This repository contains the code for CAB403 which is a part of the core curriculum of the Computer and Software Systems Major. 
 
 ### Topics Covered 
--Week 1: 
--Week 2:
--Week 3:
--Week 4:
--Week 5:
--Week 6: 
--Week 7:
--Week 8:
--Week 9:
--Week 10:
--Week 11:
--Week 12:
--Week 13:
+Week 1: Introduction  
+Week 2: Operating System Structures  
+Week 3: Processes  
+Week 4: Threads  
+Week 5: Synchronisation  
+Week 6: Safety-Critical Systems  
+Week 7: Security and Protection  
+Week 8: CPU Scheduling  
+Week 9: Deadlocks  
+Week 10: Main Memory  
+Week 11: File Systems  
+Week 12: Virtual Machines and Unit Review  
+Week 13:  
 
 #### Learning outcomes
--   Put in learning outcomes
+-   Break down the architecture and components of modern operating systems.
+-   Articulate industry standards and critically apply best practice for developing safety-critical systems.
+-   Determine the potential societal and safety impact of systems programming failures in given scenarios.
+-   Construct low-level systems programs to carry out authentic systems programming tasks.
 
 
 ### Notes about the Repository/Unit
