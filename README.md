@@ -24,3 +24,4 @@ Week 13:
 
 
 ### Notes about the Repository/Unit
+For more notes and code refer [CAB403 as a Pre-requisite](https://github.com/DonMMK/Embedded-Systems-EGH456/tree/main/PreRequisite/CAB403)
